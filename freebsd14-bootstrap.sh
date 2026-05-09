@@ -1,4 +1,11 @@
 #!/bin/sh
+#
+# FreeBSD 14 bootstrap
+#
+# Run:
+# fetch -qo - https://raw.githubusercontent.com/keshwarsingh/pub/main/freebsd14-bootstrap.sh | sh
+#
+
 set -eu
 
 GITHUB_USER="keshwarsingh"
