@@ -1,2 +1,5 @@
 # pub
-Collection of scripts, notes, snippets, and automation helpers.
+
+Public scratchpad of useful things.
+
+Mostly scripts, notes, and reusable setup helpers.
