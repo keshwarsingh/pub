@@ -30,7 +30,7 @@ echo "Bootstrapping pkg..."
 pkg -N >/dev/null 2>&1 || env ASSUME_ALWAYS_YES=yes pkg bootstrap -f
 
 echo "Installing packages..."
-pkg install -y sudo ca_root_nss nano
+pkg install -y sudo ca_root_nss nano wget
 
 echo "Ensuring ${ADMIN_USER} is in wheel..."
 pw groupmod wheel -m "$ADMIN_USER"
