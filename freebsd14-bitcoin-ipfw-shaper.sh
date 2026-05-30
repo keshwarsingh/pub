@@ -32,10 +32,10 @@ cat > "${RULES}" <<'EOF'
 ipfw -q flush
 
 # 100 Mbps upload
-ipfw pipe 1 config bw 100Mbit/s
+ipfw pipe 1 config bw 100Mbit/s queue 50
 
 # 100 Mbps download
-ipfw pipe 2 config bw 100Mbit/s
+ipfw pipe 2 config bw 100Mbit/s queue 50
 
 # Outbound Bitcoin traffic
 ipfw add 100 pipe 1 tcp from me to any 8333
