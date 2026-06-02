@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# OpenBSD 7.9 installer bootstrap from Linux
+# OpenBSD 7.9 install from Linux
 #
 # Run:
 # wget -O - https://raw.githubusercontent.com/keshwarsingh/pub/main/openbsd79-bootstrap-from-linux.sh | bash
