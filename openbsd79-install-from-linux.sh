@@ -3,7 +3,7 @@
 # OpenBSD 7.9 install from Linux
 #
 # Run:
-# wget -O - https://raw.githubusercontent.com/keshwarsingh/pub/main/openbsd79-bootstrap-from-linux.sh | bash
+# wget -O - https://raw.githubusercontent.com/keshwarsingh/pub/main/openbsd79-install-from-linux.sh | bash
 #
 
 set -euo pipefail
