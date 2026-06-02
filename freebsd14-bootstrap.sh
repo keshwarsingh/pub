@@ -8,10 +8,7 @@
 
 set -eu
 
-GITHUB_USER="keshwarsingh"
 ADMIN_USER="administrator"
-
-KEY_URL="https://github.com/${GITHUB_USER}.keys"
 
 [ "$(id -u)" -eq 0 ] || {
   echo "Run as root"
@@ -26,6 +23,11 @@ if [ "$FREEBSD_MAJOR" != "14" ]; then
   exit 1
 fi
 
+if ! id "$ADMIN_USER" >/dev/null 2>&1; then
+  echo "User ${ADMIN_USER} does not exist."
+  exit 1
+fi
+
 echo "Bootstrapping pkg..."
 pkg -N >/dev/null 2>&1 || env ASSUME_ALWAYS_YES=yes pkg bootstrap -f
 
@@ -35,29 +37,18 @@ pkg install -y sudo ca_root_nss nano wget
 echo "Ensuring ${ADMIN_USER} is in wheel..."
 pw groupmod wheel -m "$ADMIN_USER"
 
-echo "Installing GitHub SSH keys for ${ADMIN_USER}..."
+echo "Installing SSH public key for ${ADMIN_USER}..."
 ADMIN_HOME="$(getent passwd "$ADMIN_USER" | cut -d: -f6)"
 
 mkdir -p "$ADMIN_HOME/.ssh"
 chmod 700 "$ADMIN_HOME/.ssh"
 
-fetch -qo /tmp/github.keys "$KEY_URL"
-
-if [ ! -s /tmp/github.keys ]; then
-  echo "No SSH keys found at ${KEY_URL}"
-  exit 1
-fi
-
-touch "$ADMIN_HOME/.ssh/authorized_keys"
-cat /tmp/github.keys >> "$ADMIN_HOME/.ssh/authorized_keys"
-
-sort -u "$ADMIN_HOME/.ssh/authorized_keys" \
-  -o "$ADMIN_HOME/.ssh/authorized_keys"
+cat > "$ADMIN_HOME/.ssh/authorized_keys" <<'EOF'
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxVnN0JXVedUR/7lNp712Qlof7etMtKOrJKuTw72wf5DOWX7IQRiGdUoWeD0PMnViPpMOTNiMphCpi21Y/cEP5i7wt0gX/fZtq4nxb07VV0TfZwFYKSoW5aqNHGHqqIUCVGOaxJdDANXMiDAkHxx8QSbhXiCi8U7CM+kOzFvZM/MD7BVirW6fRmCcD88RqkQGwCeURwL0yIBXrbn3XXX3n8I/1VbXaRBwGCXrezu0dL/vEyB87Nud2/49T8C22+Ftvisp7XCqjlMzc5uvv1s1ZCMg2RotBExx61IqsZKsBCiDe6CZZQhvLoUxwVZywOjaeWRKYda2ixUuhh4llhzL/
+EOF
 
 chmod 600 "$ADMIN_HOME/.ssh/authorized_keys"
 chown -R "$ADMIN_USER:$ADMIN_USER" "$ADMIN_HOME/.ssh"
-
-rm -f /tmp/github.keys
 
 echo "Configuring passwordless sudo..."
 mkdir -p /usr/local/etc/sudoers.d
